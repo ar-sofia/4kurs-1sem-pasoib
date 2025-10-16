@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  clamav:
+    image: clamav/clamav:latest
+    container_name: clamav
+    restart: unless-stopped
+    ports:
+      - "3311:3310"  # ClamAV daemon port (изменен внешний порт на 3311)
+    volumes:
+      - clamav_db:/var/lib/clamav
+      - clamav_logs:/var/log/clamav
+      - ./scan:/scan  # Directory for files to scan
+      - ./quarantine:/quarantine  # Quarantine directory
+      - ./signatures:/var/lib/clamav/signatures  # Custom signatures
+    environment:
+      - CLAMAV_NO_FRESHCLAMD=false
+      - CLAMAV_NO_MILTERD=false
+      - CLAMAV_NO_FANGFRISCH=false
+    networks:
+      - clamav-network
+
+  # Optional: ClamAV REST API (clamav-rest) - отключен из-за проблем с образом
+  # clamav-rest:
+  #   image: mkodockx/docker-clamav-rest:latest
+  #   container_name: clamav-rest
+  #   restart: unless-stopped
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     - CLAMD_HOST=clamav
+  #     - CLAMD_PORT=3310
+  #   depends_on:
+  #     - clamav
+  #   networks:
+  #     - clamav-network
+
+volumes:
+  clamav_db:
+    driver: local
+  clamav_logs:
+    driver: local
+
+networks:
+  clamav-network:
+    driver: bridge
