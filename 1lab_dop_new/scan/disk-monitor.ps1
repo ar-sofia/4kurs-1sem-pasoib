@@ -8,10 +8,6 @@ try {
 }
 
 # Original file content:
-
-
-# Original file content:
-# ������ ��� ����������� ��������� ������������
 Write-Host "=== ���������� ������ ===" -ForegroundColor Green
 
 Get-WmiObject -Class Win32_LogicalDisk | Where-Object {$_.DriveType -eq 3} | ForEach-Object {

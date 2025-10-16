@@ -20,21 +20,6 @@ services:
     networks:
       - clamav-network
 
-  # Optional: ClamAV REST API (clamav-rest) - отключен из-за проблем с образом
-  # clamav-rest:
-  #   image: mkodockx/docker-clamav-rest:latest
-  #   container_name: clamav-rest
-  #   restart: unless-stopped
-  #   ports:
-  #     - "8080:8080"
-  #   environment:
-  #     - CLAMD_HOST=clamav
-  #     - CLAMD_PORT=3310
-  #   depends_on:
-  #     - clamav
-  #   networks:
-  #     - clamav-network
-
 volumes:
   clamav_db:
     driver: local
