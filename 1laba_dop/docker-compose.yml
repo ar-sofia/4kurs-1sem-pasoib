@@ -1,0 +1,40 @@
+services:
+  clamav-daemon:
+    image: ghcr.io/clamav/clamav:stable
+    container_name: clamav-daemon
+    restart: unless-stopped
+    ports:
+      - "3310:3310"
+    volumes:
+      - ./config:/etc/clamav:ro
+      - ./databases:/var/lib/clamav
+      - ./logs:/var/log/clamav
+      - ./custom-signatures:/custom-sigs:ro
+      - ./scan:/scan:ro
+    command: >
+      sh -c "
+        cp -f /custom-sigs/* /var/lib/clamav 2>/dev/null || true;
+        chown -R clamav:clamav /var/lib/clamav;
+        clamd -F --config-file=/etc/clamav/clamd.conf
+      "
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo PING | nc -w 2 localhost 3310 | grep -q PONG'"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  freshclam:
+    image: ghcr.io/clamav/clamav:stable
+    container_name: clamav-freshclam
+    restart: unless-stopped
+    depends_on:
+      - clamav-daemon
+    volumes:
+      - ./config:/etc/clamav:ro
+      - ./databases:/var/lib/clamav
+      - ./logs:/var/log/clamav
+    command: freshclam -F --config-file=/etc/clamav/freshclam.conf
+
+
+
+
